@@ -1,0 +1,21 @@
+[package]
+name = "example-schedule-rs"
+version = "0.1.0"
+edition = "2021"
+license = "Apache-2.0"
+description = "Schedule a Rust function to run periodically with Resonate's high-level schedule() API."
+
+[[bin]]
+name = "schedule"
+path = "src/bin/schedule.rs"
+
+[[bin]]
+name = "worker"
+path = "src/bin/worker.rs"
+
+[dependencies]
+resonate = { package = "resonate-sdk", git = "https://github.com/resonatehq/resonate-sdk-rs", branch = "main" }
+tokio = { version = "1", features = ["full"] }
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+chrono = "0.4"
