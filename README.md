@@ -90,5 +90,5 @@ Every minute, you'll see output like:
 
 - [Resonate Documentation](https://docs.resonatehq.io)
 - [Schedule Pattern](https://docs.resonatehq.io/get-started/examples/schedule)
-- [Schedules API](https://docs.resonatehq.io/concepts/schedules)
+- [Schedules API](https://docs.resonatehq.io/learn/schedules)
 - [Rust SDK Guide](https://docs.resonatehq.io/develop/rust)
