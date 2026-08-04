@@ -18,21 +18,34 @@ Running a function on a cron schedule sounds simple — but in practice, what ha
 
 ## Overview
 
-This example shows how to use Resonate's `schedule()` method to register a function as a periodic job using a cron expression. The Resonate server triggers the function automatically, and a worker processes each execution durably.
+This example shows how to use Resonate's `schedule()` method to register a function as a periodic job using a cron expression. The Resonate server triggers the function automatically, and a worker processes each execution durably (`src/bin/schedule.rs`):
+
+<!-- sotto self:src/bin/schedule.rs#register+schedule -->
 
 ```rust
-// Register the function
 resonate.register(generate_report).unwrap();
 
-// Schedule it to run every minute
-resonate
+// Schedule generate_report to run every minute.
+// Change the cron expression to "0 9 * * *" for daily at 9am, etc.
+let result = resonate
     .schedule(
-        "daily_report",     // schedule ID
-        "* * * * *",        // cron expression
-        "generate_report",  // function name
-        123_u64,            // arguments
+        "daily_report",    // schedule ID
+        "* * * * *",       // cron: every minute
+        "generate_report", // function name (matches #[resonate::function])
+        123_u64,           // user_id argument
     )
-    .await?;
+    .await;
+
+match result {
+    Ok(_) => println!("Schedule created. Start the worker to process executions."),
+    Err(Error::ServerError { code: 40901, .. }) => {
+        println!("Schedule already exists. Start the worker to process executions.");
+    }
+    Err(e) => {
+        eprintln!("Failed to create schedule: {e}");
+        std::process::exit(1);
+    }
+}
 ```
 
 ## How It Works
