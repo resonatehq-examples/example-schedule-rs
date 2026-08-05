@@ -14,16 +14,19 @@ async fn main() {
         ..Default::default()
     });
 
+    // #region register
     resonate.register(generate_report).unwrap();
+    // #endregion
 
+    // #region schedule
     // Schedule generate_report to run every minute.
     // Change the cron expression to "0 9 * * *" for daily at 9am, etc.
     let result = resonate
         .schedule(
-            "daily_report",  // schedule ID
-            "* * * * *",     // cron: every minute
+            "daily_report",    // schedule ID
+            "* * * * *",       // cron: every minute
             "generate_report", // function name (matches #[resonate::function])
-            123_u64,         // user_id argument
+            123_u64,           // user_id argument
         )
         .await;
 
@@ -37,6 +40,7 @@ async fn main() {
             std::process::exit(1);
         }
     }
+    // #endregion
 
     resonate.stop().await.ok();
 }
