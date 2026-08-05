@@ -4,6 +4,12 @@
   <img alt="Schedule banner" src="./assets/banner-light.png">
 </picture>
 
+<p align="center">
+  <a href="https://resonatehq.github.io/examples-ci/">
+    <img src="https://img.shields.io/endpoint?url=https://resonatehq.github.io/examples-ci/status/example-schedule-rs.json" alt="examples-ci status">
+  </a>
+</p>
+
 # Schedule
 
 **Resonate Rust SDK**
@@ -53,10 +59,12 @@ match result {
 | File | Role |
 |------|------|
 | `src/bin/schedule.rs` | Creates the cron schedule on the Resonate server (run once) |
-| `src/bin/worker.rs` | Registers the function and processes each tick (run continuously) |
+| `src/bin/worker.rs` | Processes each tick (run continuously) |
 | `src/lib.rs` | The function that runs on each scheduled tick |
 
-The Resonate server fires a new durable promise on each cron tick. The worker picks it up, executes the function, and records the result. If the worker crashes, Resonate retries the execution automatically.
+Both binaries call `register` — that is how each process learns the name-to-function mapping for its own side of the job. Registering in `schedule.rs` is what lets it schedule by the name `generate_report`; registering in `worker.rs` is what lets it execute the ticks. Neither one registers on the other's behalf.
+
+Creating the schedule and processing it are deliberately separate: the schedule lives on the server, so `schedule.rs` exits as soon as it has been created, and the workers can come and go independently.
 
 ## Cron Reference
 
